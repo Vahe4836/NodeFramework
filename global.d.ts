@@ -81,8 +81,7 @@ declare global {
                 getCity: { get: Function, post: Function },
                 getProduct: { get: Function, post: Function }
         },
-        app: { get: Function, post: Function },
-        db: { get: Function, post: Function }
+        app: { get: Function, post: Function }
 }
     const services: {
         test: {

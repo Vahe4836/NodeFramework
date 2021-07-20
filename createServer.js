@@ -49,8 +49,8 @@ const getDirectoriesRecursive = srcpath => {
     return [srcpath, ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive))];
 }
 
-const apiPath = process.cwd() + '\\application\\api'
-const modulPath = process.cwd() + '\\application\\services'
+const apiPath = process.cwd() + '/application/api'
+const modulPath = process.cwd() + '/application/services'
 
 const folders = path => getDirectoriesRecursive(path).filter(e => e !== path)
 
@@ -84,7 +84,7 @@ const walk = (dir, done) => {
 const getFiles = async path => new Promise(res => {
     walk(path, (err, result) => {
         if(err) console.log(err)
-        const paths = result.map(e => e.split("\\").join('/')).filter(interface => {
+        const paths = result.filter(interface => {
             if(interface.includes('.map')) {
                 fs.promises.unlink(interface).catch(() => {}) 
                 return false;
@@ -95,12 +95,13 @@ const getFiles = async path => new Promise(res => {
     })
 })
 
+
 const api = async () => {
     let str = ''
     const data = await getFiles(apiPath)
     const router = data.map(interface => ({ path: interface, interface: interface.split('application')[1].slice(0, -3).split('/').filter(e => e).join('.') }))
     const folder = folders(apiPath)
-    folder.map(e => e.split('\\application')[1].split('\\').filter(e => e).join('.')).forEach(path => {
+    folder.map(e => e.split('/application')[1].split('/').filter(e => e).join('.')).forEach(path => {
         str += `\n${path} = {}` 
     })
     router.map(({ path, interface }) => {
@@ -115,9 +116,9 @@ Object.freeze(api)
 const services = async () => {
     let str = ''
     const data = await getFiles(modulPath)
-    const folder = folders(modulPath).filter(e => e.includes('application\\services'))
+    const folder = folders(modulPath).filter(e => e.includes('application/services'))
     const router = data.map(interface => ({ path: interface, interface: interface.split('application')[1].slice(0, -3).split('/').filter(e => e).join('.') }))
-    folder.map(e => e.split('\\application')[1].split('\\').filter(e => e).join('.')).forEach(path => {
+    folder.map(e => e.split('/application')[1].split('/').filter(e => e).join('.')).forEach(path => {
         str += `\n${path} = {}` 
     })
     router.map(({ path, interface }) => {
@@ -189,7 +190,7 @@ const frontConnection = async () => {
     const data = await getFiles(apiPath)
     const router = data.map(interface => ({ path: interface.split('application')[1].slice(0, -3), interface: interface.split('application')[1].slice(0, -3).split('/').filter(e => e).join('.') }))
     const folder = folders(apiPath)
-    folder.map(e => e.split('\\application')[1].split('\\').filter(e => e).join('.')).forEach(path => {
+    folder.map(e => e.split('/application')[1].split('/').filter(e => e).join('.')).forEach(path => {
         str += `\n    ${path} = {}` 
     })
     router.map(({ path, interface }) => {
@@ -298,9 +299,8 @@ app.${request}("${interface}", async (req, res) => {
     })
     globalts()
     const expressApp = await express(application)
-    return expressApp
+    fs.writeFileSync(process.cwd() + '/express.js', expressApp)
+    // return expressApp
 }
 
-createServer().then(res => eval(res))
-
-
+createServer()//.then(res => eval(res))
