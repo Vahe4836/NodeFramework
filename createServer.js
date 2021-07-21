@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const methods = ['get', 'post']
-const { exec } = require('child_process')
 const config = eval(fs.readFileSync(process.cwd() + '/application/config/config.js', 'utf8'))
+
 const getGlobalVariables = () => {
     const node = { process };
     const npm = {};
@@ -254,6 +254,7 @@ const globalts = async () => {
     let npmStr = '    const npm: {'
     let apiString = `    const api: ${getType(apiStr)}`
     let servicesString = `    const services: ${getType(servicesStr)}`
+    const confStr = `    const config : ${JSON.stringify(config, null, 2)}`
     Object.keys(node).forEach(modul => {
         nodeStr += `\n        ${modul}: typeof ${modul}`
     })
@@ -267,6 +268,7 @@ ${nodeStr}
 ${npmStr}
 ${apiString}
 ${servicesString}
+${confStr}
     const db: Database
     
 }`;
