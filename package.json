@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"node createServer.js\"  \"nodemon server.js\"",
-    "dev": "nodemon server.js",
+    "dev": "nodemon --config nodemon.json",
     "build": "tsc"
   },
   "keywords": [],

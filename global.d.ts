@@ -31,6 +31,7 @@ import bcrypt from "bcrypt"
 import concurrently from "concurrently"
 import cors from "cors"
 import express from "express"
+import fastify from "fastify"
 import funthreads from "funthreads"
 import metasql from "metasql"
 import morgan from "morgan"
@@ -72,6 +73,7 @@ declare global {
         concurrently: typeof concurrently
         cors: typeof cors
         express: typeof express
+        fastify: typeof fastify
         funthreads: typeof funthreads
         metasql: typeof metasql
         morgan: typeof morgan
@@ -81,7 +83,9 @@ declare global {
                 getCity: { get: Function, post: Function },
                 getProduct: { get: Function, post: Function }
         },
-        app: { get: Function, post: Function }
+        app: { get: Function, post: Function },
+        test: { get: Function, post: Function },
+        tets4: { get: Function, post: Function }
 }
     const services: {
         test: {
@@ -90,6 +94,18 @@ declare global {
                         test2: { get: Function, post: Function }
                 }
         }
+}
+    const config : {
+  "port": 8888,
+  "db": {
+    "database": "fudy",
+    "password": "postgres",
+    "port": 5432,
+    "host": "localhost",
+    "user": "postgres",
+    "logger": {}
+  },
+  "logger": {}
 }
     const db: Database
     

@@ -1,0 +1,6 @@
+{
+    "watch": ["dev"],
+    "ext": "ts",
+    "exec": "sh server.sh"
+  }
+  

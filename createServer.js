@@ -1,6 +1,11 @@
 const fs = require('fs');
+const vm = require('vm');
 const path = require('path');
 const methods = ['get', 'post']
+
+function getScript(string) {
+    return new vm.Script(string).runInThisContext();
+};
 const config = eval(fs.readFileSync(process.cwd() + '/application/config/config.js', 'utf8'))
 
 const getGlobalVariables = () => {
@@ -105,7 +110,7 @@ const api = async () => {
         str += `\n${path} = {}` 
     })
     router.map(({ path, interface }) => {
-        str += `\n${interface} = eval(fs.readFileSync('${path}', 'utf8'))`
+        str += `\n${interface} = getScript(fs.readFileSync('${path}', 'utf8'))`
     })
     return `
 const api = {}
@@ -122,7 +127,7 @@ const services = async () => {
         str += `\n${path} = {}` 
     })
     router.map(({ path, interface }) => {
-        str += `\n${interface} = eval(fs.readFileSync('${path}', 'utf8'))`
+        str += `\n${interface} = getScript(fs.readFileSync('${path}', 'utf8'))`
     })
     return `
 const services = {}
@@ -165,11 +170,14 @@ for (const name of dependencies) {
 
 Object.freeze(node)
 Object.freeze(npm)
-const { fs } = node
+const { fs, vm } = node
 const { morgan, cors } = npm 
 const fastify = require('fastify')({ logger: true })
 
-const config = eval(fs.readFileSync(process.cwd() + '/application/config/config.js', 'utf8'))
+function getScript(string) {
+    return new vm.Script(string).runInThisContext();
+};
+const config = getScript(fs.readFileSync(process.cwd() + '/application/config/config.js', 'utf8'))
 const { Database } = require('metasql');
 const db = new Database(config.db)
 ${data}

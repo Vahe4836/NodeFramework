@@ -6,6 +6,7 @@
 
     get: async ({ a }) => {
         const { bcrypt } = npm
+        api
         return a + 2
     }
 })
